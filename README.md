@@ -1,2 +1,2 @@
 # CommandLineParser
-A tool for parsing CLI arguments and parameters.
+A .Net tool for parsing CLI arguments and parameters.
