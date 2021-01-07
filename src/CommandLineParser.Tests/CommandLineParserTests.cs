@@ -6,7 +6,8 @@ namespace CommandLineParser.Tests
     public class CommandLineParserTests
     {
         private readonly ITestOutputHelper testOutputHelper;
-        private static string[] args = new []{ "--n", "25", "--d", "This is a test description" };
+
+        private static string parameterFlagPrefix = "--";
 
         public CommandLineParserTests(ITestOutputHelper testOutputHelper)
         {
@@ -14,31 +15,71 @@ namespace CommandLineParser.Tests
         }
 
         [Fact]
-        public void TestIntegerInput()
+        public void TestStringInput()
         {
-            var options = new CommandLineParserOptions("--");
+            string expectedValue = "This is a test description";
+            var args = new[] { parameterFlagPrefix + "s", expectedValue };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
             var parser = new CommandLineParser<Parameters>(options);
 
             var parameters = parser.ParseOptionsFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "This is the value", parameters.Number.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.StringParameter.ToString()));
             testOutputHelper.WriteLine("Thank you very much for running this test");
 
-            Assert.True(parameters.Number == 25);
+            Assert.True(parameters.StringParameter == expectedValue);
         }
 
         [Fact]
-        public void TestStringInput()
+        public void TestIntegerInput()
         {
-            var options = new CommandLineParserOptions("--");
+            int expectedValue = 25;
+            var args = new[] { parameterFlagPrefix + "i", expectedValue.ToString() };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
             var parser = new CommandLineParser<Parameters>(options);
 
             var parameters = parser.ParseOptionsFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "This is the value", parameters.Description.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.IntegerParameter.ToString()));
             testOutputHelper.WriteLine("Thank you very much for running this test");
 
-            Assert.True(parameters.Description == "This is a test description");
+            Assert.True(parameters.IntegerParameter == expectedValue);
+        }
+
+        [Fact]
+        public void TestFloatInput()
+        {
+            float expectedValue = 0.167f;
+            string[] args = new[] { parameterFlagPrefix + "f", expectedValue.ToString() };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
+            var parser = new CommandLineParser<Parameters>(options);
+
+            var parameters = parser.ParseOptionsFromArguments(args);
+
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.FloatParameter.ToString()));
+            testOutputHelper.WriteLine("Thank you very much for running this test");
+
+            Assert.True(parameters.FloatParameter == expectedValue);
+        }
+
+        [Fact]
+        public void TestBoolInput()
+        {
+            bool expectedValue = true;
+            string[] args = new[] { parameterFlagPrefix + "b", expectedValue.ToString() };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
+            var parser = new CommandLineParser<Parameters>(options);
+
+            var parameters = parser.ParseOptionsFromArguments(args);
+
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.BooleanParameter.ToString()));
+            testOutputHelper.WriteLine("Thank you very much for running this test");
+
+            Assert.True(parameters.BooleanParameter == expectedValue);
         }
     }
 
@@ -46,11 +87,17 @@ namespace CommandLineParser.Tests
     /// Test Model
     /// </summary>
     public class Parameters
-    { 
-        [CommandLineArgumentFlag("n")]
-        public int Number { get; set; }
+    {
+        [CommandLineArgumentFlag("s")]
+        public string StringParameter { get; set; }
 
-        [CommandLineArgumentFlag("d")]
-        public string Description { get; set; }
+        [CommandLineArgumentFlag("i")]
+        public int IntegerParameter { get; set; }
+
+        [CommandLineArgumentFlag("f")]
+        public float FloatParameter { get; set; }
+
+        [CommandLineArgumentFlag("b")]
+        public bool BooleanParameter { get; set; }
     }
 }

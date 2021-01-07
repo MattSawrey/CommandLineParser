@@ -42,11 +42,11 @@ namespace CommandLineParser
 		/// </summary>
 		public void WriteOutPossibleParameters()
 		{
-			foreach (string key in PossibleParameterFlags.Keys)
-			{
-				Console.WriteLine(string.Format("{0}: {1}", key, PossibleParameterFlags[key]));
-			}
-		}
+            foreach (string key in PossibleParameterFlags.Keys)
+            {
+                Console.WriteLine(string.Format("{0}: {1}", key, PossibleParameterFlags[key]));
+            }
+        }
 
 		/// <summary>
 		/// Parses a collection of CLI argument values to the provided model shape
