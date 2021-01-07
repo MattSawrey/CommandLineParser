@@ -26,9 +26,24 @@ namespace CommandLineParser.Tests
             var parameters = parser.ParseOptionsFromArguments(args);
 
             testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.StringParameter.ToString()));
-            testOutputHelper.WriteLine("Thank you very much for running this test");
 
             Assert.True(parameters.StringParameter == expectedValue);
+        }
+
+        [Fact]
+        public void TestCharacterInput()
+        {
+            char expectedValue = 'a';
+            var args = new[] { parameterFlagPrefix + "c", expectedValue.ToString() };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
+            var parser = new CommandLineParser<Parameters>(options);
+
+            var parameters = parser.ParseOptionsFromArguments(args);
+
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.CharacterParameter.ToString()));
+
+            Assert.True(parameters.CharacterParameter == expectedValue);
         }
 
         [Fact]
@@ -43,7 +58,6 @@ namespace CommandLineParser.Tests
             var parameters = parser.ParseOptionsFromArguments(args);
 
             testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.IntegerParameter.ToString()));
-            testOutputHelper.WriteLine("Thank you very much for running this test");
 
             Assert.True(parameters.IntegerParameter == expectedValue);
         }
@@ -60,9 +74,40 @@ namespace CommandLineParser.Tests
             var parameters = parser.ParseOptionsFromArguments(args);
 
             testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.FloatParameter.ToString()));
-            testOutputHelper.WriteLine("Thank you very much for running this test");
 
             Assert.True(parameters.FloatParameter == expectedValue);
+        }
+
+        [Fact]
+        public void TestDoubleInput()
+        {
+            double expectedValue = 0.856d;
+            string[] args = new[] { parameterFlagPrefix + "d", expectedValue.ToString() };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
+            var parser = new CommandLineParser<Parameters>(options);
+
+            var parameters = parser.ParseOptionsFromArguments(args);
+
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.DoubleParameter.ToString()));
+
+            Assert.True(parameters.DoubleParameter == expectedValue);
+        }
+
+        [Fact]
+        public void TestDecimalInput()
+        {
+            decimal expectedValue = 3.856m;
+            string[] args = new[] { parameterFlagPrefix + "m", expectedValue.ToString() };
+
+            var options = new CommandLineParserOptions(parameterFlagPrefix);
+            var parser = new CommandLineParser<Parameters>(options);
+
+            var parameters = parser.ParseOptionsFromArguments(args);
+
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.DecimalParameter.ToString()));
+
+            Assert.True(parameters.DecimalParameter == expectedValue);
         }
 
         [Fact]
@@ -91,11 +136,20 @@ namespace CommandLineParser.Tests
         [CommandLineArgumentFlag("s")]
         public string StringParameter { get; set; }
 
+        [CommandLineArgumentFlag("c")]
+        public char CharacterParameter { get; set; }
+
         [CommandLineArgumentFlag("i")]
         public int IntegerParameter { get; set; }
 
         [CommandLineArgumentFlag("f")]
         public float FloatParameter { get; set; }
+
+        [CommandLineArgumentFlag("d")]
+        public double DoubleParameter { get; set; }
+
+        [CommandLineArgumentFlag("m")]
+        public decimal DecimalParameter { get; set; }
 
         [CommandLineArgumentFlag("b")]
         public bool BooleanParameter { get; set; }
