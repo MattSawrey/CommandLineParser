@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "CommandLineParser.Example": {
+      "commandName": "Project",
+      "commandLineArgs": "new --n 25"
+    }
+  }
+}

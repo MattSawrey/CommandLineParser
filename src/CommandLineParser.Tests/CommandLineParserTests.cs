@@ -1,6 +1,8 @@
+using CommandLineParser.Attributes;
+using System.Reflection;
 using Xunit;
 using Xunit.Abstractions;
-
+ 
 namespace CommandLineParser.Tests
 {
     public class CommandLineParserTests
@@ -18,140 +20,141 @@ namespace CommandLineParser.Tests
         public void TestStringInput()
         {
             string expectedValue = "This is a test description";
-            var args = new[] { parameterFlagPrefix + "s", expectedValue };
+            var args = new[] { "test", parameterFlagPrefix + "s", expectedValue };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.StringParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.StringParameter.ToString()));
 
-            Assert.True(parameters.StringParameter == expectedValue);
+            Assert.True(command.StringParameter == expectedValue);
         }
 
         [Fact]
         public void TestCharacterInput()
         {
             char expectedValue = 'a';
-            var args = new[] { parameterFlagPrefix + "c", expectedValue.ToString() };
+            var args = new[] { "test", parameterFlagPrefix + "c", expectedValue.ToString() };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.CharacterParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.CharacterParameter.ToString()));
 
-            Assert.True(parameters.CharacterParameter == expectedValue);
+            Assert.True(command.CharacterParameter == expectedValue);
         }
 
         [Fact]
         public void TestIntegerInput()
         {
             int expectedValue = 25;
-            var args = new[] { parameterFlagPrefix + "i", expectedValue.ToString() };
+            var args = new[] { "test", parameterFlagPrefix + "i", expectedValue.ToString() };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.IntegerParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.IntegerParameter.ToString()));
 
-            Assert.True(parameters.IntegerParameter == expectedValue);
+            Assert.True(command.IntegerParameter == expectedValue);
         }
 
         [Fact]
         public void TestFloatInput()
         {
             float expectedValue = 0.167f;
-            string[] args = new[] { parameterFlagPrefix + "f", expectedValue.ToString() };
+            string[] args = new[] { "test", parameterFlagPrefix + "f", expectedValue.ToString() };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.FloatParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.FloatParameter.ToString()));
 
-            Assert.True(parameters.FloatParameter == expectedValue);
+            Assert.True(command.FloatParameter == expectedValue);
         }
 
         [Fact]
         public void TestDoubleInput()
         {
             double expectedValue = 0.856d;
-            string[] args = new[] { parameterFlagPrefix + "d", expectedValue.ToString() };
+            string[] args = new[] { "test", parameterFlagPrefix + "d", expectedValue.ToString() };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.DoubleParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.DoubleParameter.ToString()));
 
-            Assert.True(parameters.DoubleParameter == expectedValue);
+            Assert.True(command.DoubleParameter == expectedValue);
         }
 
         [Fact]
         public void TestDecimalInput()
         {
             decimal expectedValue = 3.856m;
-            string[] args = new[] { parameterFlagPrefix + "m", expectedValue.ToString() };
+            string[] args = new[] { "test", parameterFlagPrefix + "m", expectedValue.ToString() };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.DecimalParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.DecimalParameter.ToString()));
 
-            Assert.True(parameters.DecimalParameter == expectedValue);
+            Assert.True(command.DecimalParameter == expectedValue);
         }
 
         [Fact]
         public void TestBoolInput()
         {
             bool expectedValue = true;
-            string[] args = new[] { parameterFlagPrefix + "b", expectedValue.ToString() };
+            string[] args = new[] { "test", parameterFlagPrefix + "b", expectedValue.ToString() };
 
-            var options = new CommandLineParserOptions(parameterFlagPrefix);
-            var parser = new CommandLineParser<Parameters>(options);
+            var options = new CommandLineParserOptions(parameterFlagPrefix, Assembly.GetExecutingAssembly());
+            var parser = new CommandLineParser(options);
 
-            var parameters = parser.ParseOptionsFromArguments(args);
+            var command = parser.ParseCommandFromArguments(args);
 
-            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", parameters.BooleanParameter.ToString()));
+            testOutputHelper.WriteLine(string.Format("{0}: {1}", "Parsed value: ", command.BooleanParameter.ToString()));
             testOutputHelper.WriteLine("Thank you very much for running this test");
 
-            Assert.True(parameters.BooleanParameter == expectedValue);
+            Assert.True(command.BooleanParameter == expectedValue);
         }
     }
 
     /// <summary>
     /// Test Model
     /// </summary>
-    public class Parameters
+    [Command("test", "A command used in these tests")]
+    public class TestCommand
     {
-        [CommandLineArgumentFlag("s")]
+        [Parameter("string", "s", "The string test value")]
         public string StringParameter { get; set; }
 
-        [CommandLineArgumentFlag("c")]
+        [Parameter("char", "c", "The character test value")]
         public char CharacterParameter { get; set; }
 
-        [CommandLineArgumentFlag("i")]
+        [Parameter("int", "i", "The integer test value")]
         public int IntegerParameter { get; set; }
 
-        [CommandLineArgumentFlag("f")]
+        [Parameter("float", "f", "The float test value")]
         public float FloatParameter { get; set; }
 
-        [CommandLineArgumentFlag("d")]
+        [Parameter("double", "d", "The double test value")]
         public double DoubleParameter { get; set; }
 
-        [CommandLineArgumentFlag("m")]
+        [Parameter("decimal", "m", "The double test value")]
         public decimal DecimalParameter { get; set; }
 
-        [CommandLineArgumentFlag("b")]
+        [Parameter("boolean", "b", "The boolean test value")]
         public bool BooleanParameter { get; set; }
     }
 }

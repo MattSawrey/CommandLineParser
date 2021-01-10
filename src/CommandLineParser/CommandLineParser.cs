@@ -2,83 +2,111 @@ using System;
 using System.Reflection;
 using System.Linq;
 using System.Collections.Generic;
+using CommandLineParser.Attributes;
+using CommandLineParser.Models;
 
 namespace CommandLineParser
 {
-	public class CommandLineParser<T> where T : class, new()
+    public class CommandLineParser
 	{
 		private readonly CommandLineParserOptions Options;
-		private Dictionary<string, string> PossibleParameterFlags = new Dictionary<string, string>();
+		private Dictionary<string, Command> PossibleCommands = new Dictionary<string, Command>();
 
 		public CommandLineParser(CommandLineParserOptions options)
 		{
 			Options = options;
-			InitialisePossibleParamtersDictionary();
-			WriteOutPossibleParameters();
-		}
-
-		/// <summary>
-		/// Initialise a dictionary of the parameter input flag strings against their correspending field names. E.G "--n" for "public string Name { get; set;}"
-		/// </summary>
-		private void InitialisePossibleParamtersDictionary()
-		{
-			var optionProperties = typeof(T).GetProperties();
-			for (int i = 0; i < optionProperties.Length; i++)
-			{
-				var attributes = optionProperties[i].GetCustomAttributes().ToList();
-				for (int y = 0; y < attributes.Count(); y++)
-				{
-					if (attributes[y].GetType() == typeof(CommandLineArgumentFlagAttribute))
-					{
-						CommandLineArgumentFlagAttribute attr = (CommandLineArgumentFlagAttribute)attributes[y];
-						PossibleParameterFlags.Add(Options.ArgumentCommandPrefix + attr.FlagCode, optionProperties[i].Name);
-					}
-				}
-			}
-		}
-
-		/// <summary>
-		/// For writing out the Possible Parameters collection
-		/// </summary>
-		public void WriteOutPossibleParameters()
-		{
-            foreach (string key in PossibleParameterFlags.Keys)
-            {
-                Console.WriteLine(string.Format("{0}: {1}", key, PossibleParameterFlags[key]));
-            }
+            InitialisePossibleCommandsDictionary(options.CommandsAssembly);
         }
 
 		/// <summary>
-		/// Parses a collection of CLI argument values to the provided model shape
+		/// Initialises a dictionary of the command names against a Command Model that represents the type of the command and the property names
 		/// </summary>
-		/// <param name="args"></param>
-		/// <returns></returns>
-		public T ParseOptionsFromArguments(string[] args)
-		{
-			var result = new T();
-			var type = typeof(T);
-			var properties = type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+		/// <param name="commandsAssembly"></param>
+		private void InitialisePossibleCommandsDictionary(Assembly commandsAssembly = null)
+        {
+			// If the assembly containing the Command objects has not been provided, assume they are held in the calling assembly
+			if (commandsAssembly == null)
+				commandsAssembly = Assembly.GetEntryAssembly();
 
-			// Walk over the input arguments and attempt to match them with the paramter flags
-			for (int i = 0; i < args.Length; i++)
+			var commandTypes = commandsAssembly.GetTypes().Where(x => x.IsDefined(typeof(CommandAttribute)));
+
+			// Loop through each class and parse its properties with the parameter attribute
+			foreach (var commandType in commandTypes)
 			{
-				if (PossibleParameterFlags.ContainsKey(args[i]))
+				var commandAttribute = (CommandAttribute)commandType.GetCustomAttribute(typeof(CommandAttribute));
+				var optionProperties = commandType.GetProperties();
+
+				var commandProperties = new List<Property>();
+				foreach (var optionProperty in optionProperties)
 				{
-					var fieldName = PossibleParameterFlags[args[i]];
-					Console.WriteLine(string.Format("{0}, gives the field name: {1}", args[i], fieldName));
+					var parameterAttribute = (ParameterAttribute)optionProperty.GetCustomAttribute(typeof(ParameterAttribute));
+					var propertyName = optionProperty.Name;
+					var propertyIdentifiers = new[] { Options.ArgumentCommandPrefix + parameterAttribute.FlagCode, Options.ArgumentCommandPrefix + parameterAttribute.Name };
+					commandProperties.Add(new Property(propertyIdentifiers, propertyName));
+				}
 
-					// Want to get the entered value, which should be the next value here and try and pass it to the type
-					var value = args[i + 1];
-					Console.WriteLine(value);
+                PossibleCommands.Add(commandAttribute.Name, new Command(commandType, commandProperties));
+			}
+		}
 
-					// Try and set the property value on the generic object
-					var property = properties.FirstOrDefault(x => x.Name.ToLower() == fieldName.ToLower());
-					if (property != null)
-					{
-						property.SetValue(result, Convert.ChangeType(value, property.PropertyType), null);
-					}
+		/// <summary>
+		/// For writing out the Possible Command and each Command's parameter details
+		/// </summary>
+		public void WriteOutPossibleCommandsDetails()
+		{
+			Console.WriteLine("Commands: ");
+			foreach (string key in PossibleCommands.Keys) // Command level
+			{
+				Console.WriteLine(string.Format("{0}: {1}", "Command: ", key));
+				foreach (var property in PossibleCommands[key].Properties) // Property level
+				{
+					Console.WriteLine(string.Format("{0}: {1}. {2}: {3}", "Parameter Identifiers", string.Join(", ", property.Identifiers), "Property Name", property.Name));
 				}
 			}
+		}
+
+		/// <summary>
+		/// Dynamically parses a collection of input arguments to the appropriate command model with property values
+		/// </summary>
+		/// <param name="args">input arguments collection</param>
+		/// <returns></returns>
+		public dynamic ParseCommandFromArguments(string[] args)
+		{
+			if (!PossibleCommands.ContainsKey(args[0]))
+			{
+				Console.WriteLine(string.Format(@"The specified command ""({0})"" was not recognised.", args[0]));
+				return null;
+			}
+
+			var command = PossibleCommands[args[0]];
+			var result = Activator.CreateInstance(command.Type);
+            var properties = command.Type.GetProperties(BindingFlags.Public | BindingFlags.Instance);
+
+            // Step over the rest of the arguments, identify the parameters provided and parse the values to these parameters.
+            for (int i = 1; i < args.Length; i++)
+			{
+				// Find the property that matches the property identifier
+				var property = command.Properties.FirstOrDefault(x => x.Identifiers.Contains(args[i]));
+
+				if (property != null)
+				{
+					var value = args[i + 1];
+
+					// Grab a reference to the actual field on the object to be returned and try to populate it with the parsed value
+					var field = properties.FirstOrDefault(x => x.Name.ToLower() == property.Name.ToLower());
+					if (field != null)
+					{
+						try
+						{
+							field.SetValue(result, Convert.ChangeType(value, field.PropertyType), null);
+						}
+						catch (Exception e)
+						{
+							Console.WriteLine(e);
+						}
+					}
+				}
+            }
 
 			return result;
 		}

@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineParser", "Comman
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineParser.Tests", "CommandLineParser.Tests\CommandLineParser.Tests.csproj", "{E36D1269-8071-4516-8B9A-559132DB66B1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommandLineParser.Example", "CommandLineParser.Example\CommandLineParser.Example.csproj", "{72ADD429-3060-454E-AA45-D3867D5685F9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CommandLineParser.Example", "CommandLineParser.Example\CommandLineParser.Example.csproj", "{72ADD429-3060-454E-AA45-D3867D5685F9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
