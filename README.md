@@ -30,11 +30,11 @@ CommandLineParser is intended to support parsing of the following datatypes to a
 - Decimal
 - Boolean
 
+**Rules:**
+- string values that include spaces must be wrapped by double quotes ("test string").
+
 # Definitions:
 
-- Command: the called CLI action.
-- Argument: the properties and their values on the command object.
+- Command: the CLI action called through the first input argument.
+- Argument: Properties and their values on the command object.
 
-# Rules:
-
-- string values that include spaces must be wrapped by double quotes ("test string").
