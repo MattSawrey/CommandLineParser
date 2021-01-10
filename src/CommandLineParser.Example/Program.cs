@@ -31,17 +31,17 @@ namespace CommandLineParser.Example
     [Command("new", "The new command")]
     public class NewCommand
     {
-        [Parameter("num", "n", "The number value")]
+        [Argument("num", "n", "The number value")]
         public int Number { get; set; }
     }
 
     [Command("check", "The new command")]
     public class CheckCommand
     {
-        [Parameter("outp", "o", "The output value")]
+        [Argument("outp", "o", "The output value")]
         public string Output { get; set; }
 
-        [Parameter("num", "n", "The times value")]
+        [Argument("num", "n", "The times value")]
         public int Times { get; set; }
     }
 }

@@ -39,7 +39,7 @@ namespace CommandLineParser
 				var commandProperties = new List<Property>();
 				foreach (var optionProperty in optionProperties)
 				{
-					var parameterAttribute = (ParameterAttribute)optionProperty.GetCustomAttribute(typeof(ParameterAttribute));
+					var parameterAttribute = (ArgumentAttribute)optionProperty.GetCustomAttribute(typeof(ArgumentAttribute));
 					var propertyName = optionProperty.Name;
 					var propertyIdentifiers = new[] { Options.ArgumentCommandPrefix + parameterAttribute.FlagCode, Options.ArgumentCommandPrefix + parameterAttribute.Name };
 					commandProperties.Add(new Property(propertyIdentifiers, propertyName));

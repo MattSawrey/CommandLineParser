@@ -3,9 +3,9 @@
 namespace CommandLineParser.Attributes
 {
     [AttributeUsage(AttributeTargets.Property)]
-    public class ParameterAttribute : Attribute
+    public class ArgumentAttribute : Attribute
     {
-        public ParameterAttribute(string name, string flagCode, string description)
+        public ArgumentAttribute(string name, string flagCode, string description)
         {
             Name = name;
             FlagCode = flagCode;

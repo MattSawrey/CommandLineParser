@@ -136,25 +136,25 @@ namespace CommandLineParser.Tests
     [Command("test", "A command used in these tests")]
     public class TestCommand
     {
-        [Parameter("string", "s", "The string test value")]
+        [Argument("string", "s", "The string test value")]
         public string StringParameter { get; set; }
 
-        [Parameter("char", "c", "The character test value")]
+        [Argument("char", "c", "The character test value")]
         public char CharacterParameter { get; set; }
 
-        [Parameter("int", "i", "The integer test value")]
+        [Argument("int", "i", "The integer test value")]
         public int IntegerParameter { get; set; }
 
-        [Parameter("float", "f", "The float test value")]
+        [Argument("float", "f", "The float test value")]
         public float FloatParameter { get; set; }
 
-        [Parameter("double", "d", "The double test value")]
+        [Argument("double", "d", "The double test value")]
         public double DoubleParameter { get; set; }
 
-        [Parameter("decimal", "m", "The double test value")]
+        [Argument("decimal", "m", "The double test value")]
         public decimal DecimalParameter { get; set; }
 
-        [Parameter("boolean", "b", "The boolean test value")]
+        [Argument("boolean", "b", "The boolean test value")]
         public bool BooleanParameter { get; set; }
     }
 }
