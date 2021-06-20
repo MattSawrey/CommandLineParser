@@ -1,0 +1,10 @@
+- Add an optional default value to the Argument attribute.
+- Allow boolean values to be set to true when input as an argument (need need to specify "true" after the relevant key)
+- Sort out error handling
+	- Handle scenarios where it can't parse the value to the correct datatype.
+	- Handle scenarios where it doesn't recognise an argument identifier.
+- Make some tests with lots of input parameters using "Theory".
+- Try and figure out if I'm correct to use the current method of getting the assembly where the Commands are held? (Is allowing the optional specification of this Assembly the right way to go?).
+- Tests - pass in the expected type representation as well as the string representation so that I'm not relying on tostring().
+
+
